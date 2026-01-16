@@ -4,8 +4,6 @@ import manager.AppManager;
 import org.testng.annotations.Test;
 import pages.HomePage;
 
-import java.util.HashSet;
-
 public class LoginTests extends AppManager {
     @Test
     public void loginPositiveTest(){
