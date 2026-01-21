@@ -27,7 +27,7 @@ public class LoginTests extends AppManager {
         loginPage.typeLoginRegistrationFormWithUser(user);
         loginPage.clickBtnLogin();
 
-        Assert.assertTrue(new ContactsPage(getDriver()).isBtnAddDisplayed());
+        Assert.assertTrue(new ContactsPage(getDriver()).isBtnContactsDisplayed());
     }
 
 }
