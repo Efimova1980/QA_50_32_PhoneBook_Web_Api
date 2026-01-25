@@ -27,6 +27,9 @@ public class ContactsPage extends BasePage{
     @FindBy(xpath = "//button[text()='Sign Out']")
     WebElement btnSignOut;
 
+    @FindBy(xpath = "//h1[text() =  ' No Contacts here!']")
+    WebElement messageContacts;
+
     public void clickBtnAdd(){
         btnAdd.click();
     }
@@ -41,5 +44,17 @@ public class ContactsPage extends BasePage{
 
     public boolean isBtnContactsDisplayed(){
         return isElementDisplayed(btnContacts);
+    }
+
+    public boolean isTextInBtnSignOutPresent(String text){
+        return isTextInElementPresent(btnSignOut,text);
+    }
+
+    public boolean isTextInBtnAddPresent(String text){
+        return isTextInElementPresent(btnAdd, text);
+    }
+
+    public boolean isTextContactMessagePresent(String text){
+        return isTextInElementPresent(messageContacts, text);
     }
 }
