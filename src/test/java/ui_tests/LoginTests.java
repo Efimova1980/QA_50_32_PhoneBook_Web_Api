@@ -57,7 +57,7 @@ public class LoginTests extends AppManager {
     @Test
     public void loginNegativeTest_SpacesBeforeAndAfterMail(){
         //spaces around email must be ignored
-        User user = new User("  elton.john@gmail.com  ", "$John250347$   ");
+        User user = new User("  elton.john@gmail.com  ", "$John250347$");
         loginPage.typeLoginRegistrationFormWithUser(user);
         loginPage.clickBtnLogin();
         Assert.assertTrue(new ContactsPage(getDriver()).isBtnContactsDisplayed());

@@ -244,20 +244,4 @@ public class RegistrationTests extends AppManager {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
