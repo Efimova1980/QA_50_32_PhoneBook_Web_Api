@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import pages.ContactsPage;
 import pages.HomePage;
 import pages.LoginPage;
+import utils.RetryAnalyser;
 import utils.UserFactory;
 
 public class LoginTests extends AppManager {
@@ -20,7 +21,7 @@ public class LoginTests extends AppManager {
     }
 
     //-----------------------POSITIVE TESTS ----------------------------------
-    @Test
+    @Test(retryAnalyzer = RetryAnalyser.class)
     public void loginPositiveTest(){
         loginPage.typeLoginRegistrationForm("elton.john@gmail.com", "$John250347$");
         loginPage.clickBtnLogin();
@@ -95,4 +96,5 @@ public class LoginTests extends AppManager {
         loginPage.clickBtnLogin();
         Assert.assertEquals(loginPage.closeAlertReturnText(), "Wrong email or password");
     }
+
 }

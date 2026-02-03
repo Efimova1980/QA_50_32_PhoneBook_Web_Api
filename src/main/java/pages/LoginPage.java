@@ -30,8 +30,6 @@ public class LoginPage extends BasePage{
     @FindBy(xpath = "//button[@name='registration']")
     WebElement btnRegistration;
 
-
-
     public void typeLoginRegistrationForm(String email, String password){
         inputEmail.sendKeys(email);
         inputPassword.sendKeys(password);
@@ -57,6 +55,4 @@ public class LoginPage extends BasePage{
         alert.accept();
         return text;
     }
-
-
 }
