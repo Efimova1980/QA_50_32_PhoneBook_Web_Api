@@ -51,15 +51,14 @@ public class ContactsPage extends BasePage{
     }
 
     public boolean isContactPresentInTheContactCard(Contact contact){
-
-            if (contactCard.getText().contains(contact.getName()) &&
-                    contactCard.getText().contains(contact.getLastName()) &&
-                    contactCard.getText().contains(contact.getEmail()) &&
-                    contactCard.getText().contains(contact.getPhone()) &&
-                    contactCard.getText().contains(contact.getAddress())){
-                System.out.println(contactCard.getText());
-                return true;
-            }
+        if (contactCard.getText().contains(contact.getName()) &&
+                contactCard.getText().contains(contact.getLastName()) &&
+                contactCard.getText().contains(contact.getEmail()) &&
+                contactCard.getText().contains(contact.getPhone()) &&
+                contactCard.getText().contains(contact.getAddress())){
+            //System.out.println(contactCard.getText());
+            return true;
+        }
         return false;
     }
 

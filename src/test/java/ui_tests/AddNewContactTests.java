@@ -52,8 +52,8 @@ public class AddNewContactTests extends AppManager {
         Contact contact = positiveContact();
         addPage.typeContactForm(contact);
         addPage.clickBtnSave();
-        //contactsPage.scrollToLastContact();
         contactsPage.scrollToLastContactWithOrigin();
+        //contactsPage.scrollToLastContact();
         contactsPage.clickLastContact();
         Assert.assertTrue(contactsPage.isContactPresentInTheContactCard(contact));
     }
