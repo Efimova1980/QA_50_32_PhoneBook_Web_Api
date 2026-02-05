@@ -9,6 +9,7 @@ import pages.*;
 import static utils.ContactFactory.*;
 import utils.HeaderMenuItem;
 import static pages.BasePage.*;
+import static utils.PropertiesReader.getProperty;
 
 
 public class AddNewContactTests extends AppManager {
@@ -22,7 +23,8 @@ public class AddNewContactTests extends AppManager {
     public void login(){
         homePage = new HomePage(getDriver());
         loginPage = clickButtonHeader(HeaderMenuItem.LOGIN);
-        loginPage.typeLoginRegistrationForm("elton.john@gmail.com", "$John250347$");
+        loginPage.typeLoginRegistrationForm(getProperty("base.properties", "login"),
+                getProperty("base.properties", "password"));
         loginPage.clickBtnLogin();
         contactsPage = new ContactsPage(getDriver());
         countOfContacts = contactsPage.getCountOfContacts();
@@ -42,7 +44,17 @@ public class AddNewContactTests extends AppManager {
         Contact contact = positiveContact();
         addPage.typeContactForm(contact);
         addPage.clickBtnSave();
-//        contactsPage.clickLastcontact();
         Assert.assertTrue(contactsPage.isContactPresent(contact));
+    }
+
+    @Test
+    public void addNewContactPositiveTest_ScrollToLastcontact(){
+        Contact contact = positiveContact();
+        addPage.typeContactForm(contact);
+        addPage.clickBtnSave();
+        //contactsPage.scrollToLastContact();
+        contactsPage.scrollToLastContactWithOrigin();
+        contactsPage.clickLastContact();
+        Assert.assertTrue(contactsPage.isContactPresentInTheContactCard(contact));
     }
 }
