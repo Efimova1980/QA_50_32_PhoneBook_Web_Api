@@ -67,7 +67,7 @@ public class AddNewContactTests extends AppManager {
         contactsPage.clickLastContact();
         Assert.assertTrue(contactsPage.isContactPresentInTheContactCard(contact));
     }
-
+    //homework8
     @Test(dataProvider = "dataProviderFromFile", dataProviderClass = InvalidMailForAddContactTest_DP.class)
     public void addNewContactNegativeTestsWithInvalidMail_DP(String email){
         Contact contact = positiveContact();
