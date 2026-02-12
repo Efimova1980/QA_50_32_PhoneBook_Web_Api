@@ -1,11 +1,16 @@
 package pages;
 
 import dto.Contact;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class AddPage extends BasePage{
     public AddPage(WebDriver driver) {
@@ -38,5 +43,13 @@ public class AddPage extends BasePage{
         inputEmail.sendKeys(contact.getEmail());
         inputAddress.sendKeys(contact.getAddress());
         inputDescription.sendKeys(contact.getDescription());
+    }
+
+    public String closeAlertReturnText(){
+        Alert alert = new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.alertIsPresent());
+        String text = alert.getText();
+        alert.accept();
+        return text;
     }
 }

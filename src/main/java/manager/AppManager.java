@@ -22,7 +22,7 @@ public class AppManager {
 
     // (@BeforeMethod) setup --> (@Test) testName --> (@AfterMethod) tearDown
 
-    @AfterMethod(enabled = false)
+    @AfterMethod(enabled = true)
     public void tearDown(){ //очистка
         if (driver != null)
             driver.quit();

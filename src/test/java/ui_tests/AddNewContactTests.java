@@ -1,5 +1,6 @@
 package ui_tests;
 
+import data_providers.InvalidMailForAddContactTest_DP;
 import data_providers.ContactDataProvider;
 import dto.Contact;
 import manager.AppManager;
@@ -65,5 +66,14 @@ public class AddNewContactTests extends AppManager {
         //contactsPage.scrollToLastContact();
         contactsPage.clickLastContact();
         Assert.assertTrue(contactsPage.isContactPresentInTheContactCard(contact));
+    }
+
+    @Test(dataProvider = "dataProviderFromFile", dataProviderClass = InvalidMailForAddContactTest_DP.class)
+    public void addNewContactNegativeTestsWithInvalidMail_DP(String email){
+        Contact contact = positiveContact();
+        contact.setEmail(email);
+        addPage.typeContactForm(contact);
+        addPage.clickBtnSave();
+        Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
     }
 }
