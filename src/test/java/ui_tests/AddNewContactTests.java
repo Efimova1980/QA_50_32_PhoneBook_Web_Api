@@ -76,4 +76,30 @@ public class AddNewContactTests extends AppManager {
         addPage.clickBtnSave();
         Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
     }
+
+    @Test(dataProvider = "dataProviderFromFile_WrongPhone",
+            dataProviderClass = ContactDataProvider.class)
+    public void addNewContactNegativeTests_WrongPhoneDP(Contact contact){
+        addPage.typeContactForm(contact);
+        addPage.clickBtnSave();
+        Assert.assertTrue(addPage.closeAlertReturnText().contains("Phone not valid"));
+    }
+
+    @Test(dataProvider = "dataProviderFromFile_WrongMail",
+            dataProviderClass = ContactDataProvider.class)
+    public void addNewContactNegativeTests_WrongEmailDP(Contact contact){
+        addPage.typeContactForm(contact);
+        addPage.clickBtnSave();
+        Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
+    }
+
+    @Test(dataProvider = "dataProviderFromFile_EmptyFields",
+            dataProviderClass = ContactDataProvider.class)
+    public void addNewContactNegativeTests_EmptyFieldsDP(Contact contact){
+        addPage.typeContactForm(contact);
+        addPage.clickBtnSave();
+        Assert.assertTrue(addPage.isButtonSaveDisabled());
+    }
+
+
 }

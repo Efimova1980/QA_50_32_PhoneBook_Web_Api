@@ -52,4 +52,8 @@ public class AddPage extends BasePage{
         alert.accept();
         return text;
     }
+
+    public boolean isButtonSaveDisabled(){
+        return btnSave.isEnabled() && btnSave.isDisplayed();
+    }
 }

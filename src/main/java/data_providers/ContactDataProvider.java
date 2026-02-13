@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import static utils.ContactFactory.*;
 
 public class ContactDataProvider {
     @DataProvider
@@ -20,9 +21,14 @@ public class ContactDataProvider {
             String line = bufferedReader.readLine();
             while (line != null){
                 String[] splitArray = line.split(",");
-                list.add(Contact.builder().name(splitArray[0]).lastName(splitArray[1])
-                        .email(splitArray[2]).phone(splitArray[3]).address(splitArray[4])
-                        .description(splitArray[5]).build());
+                list.add(Contact.builder()
+                        .name(splitArray[0])
+                        .lastName(splitArray[1])
+                        .email(splitArray[2])
+                        .phone(splitArray[3])
+                        .address(splitArray[4])
+                        .description(splitArray[5])
+                        .build());
                 line = bufferedReader.readLine();
             }
         }catch (IOException exception){
@@ -32,4 +38,82 @@ public class ContactDataProvider {
         return list.listIterator();
     }
 
+    @DataProvider
+    public Iterator<Contact> dataProviderFromFile_WrongPhone(){
+        List<Contact> list = new ArrayList<>();
+        Contact contact = positiveContact();
+
+        try(BufferedReader bufferedReader = new BufferedReader(
+                new FileReader("src/test/resources/data_csv/invalid_phone_contact.csv"))){
+            String line = bufferedReader.readLine();
+            while (line != null){
+                list.add(Contact.builder()
+                        .name(contact.getName())
+                        .lastName(contact.getLastName())
+                        .email(positiveContact().getEmail())
+                        .phone(line)
+                        .address(contact.getAddress())
+                        .description(contact.getDescription())
+                        .build());
+                line = bufferedReader.readLine();
+            }
+        }catch (IOException exception){
+            exception.printStackTrace();
+            throw new RuntimeException("IO exception");
+        }
+        return list.listIterator();
+    }
+
+    @DataProvider
+    public Iterator<Contact> dataProviderFromFile_WrongMail(){
+        List<Contact> list = new ArrayList<>();
+        Contact contact = positiveContact();
+
+        try(BufferedReader bufferedReader = new BufferedReader(
+                new FileReader("src/test/resources/data_csv/invalid_email_contacts.csv"))){
+            String line = bufferedReader.readLine();
+            while (line != null){
+                list.add(Contact.builder()
+                        .name(contact.getName())
+                        .lastName(contact.getLastName())
+                        .email(line)
+                        .phone(positiveContact().getPhone())
+                        .address(contact.getAddress())
+                        .description(contact.getDescription())
+                        .build());
+                line = bufferedReader.readLine();
+            }
+        }catch (IOException exception){
+            exception.printStackTrace();
+            throw new RuntimeException("IO exception");
+        }
+        return list.listIterator();
+    }
+
+    @DataProvider
+    public Iterator<Contact> dataProviderFromFile_EmptyFields(){
+        List<Contact> list = new ArrayList<>();
+        Contact contact = positiveContact();
+
+        try(BufferedReader bufferedReader = new BufferedReader(
+                new FileReader("src/test/resources/data_csv/empty_fields_contact.csv"))){
+            String line = bufferedReader.readLine();
+            while (line != null){
+                String[] splitArray = line.split(",");
+                list.add(Contact.builder()
+                        .name(splitArray[0])
+                        .lastName(splitArray[1])
+                        .email(contact.getEmail())
+                        .phone(contact.getPhone())
+                        .address(splitArray[2])
+                        .description(contact.getDescription())
+                        .build());
+                line = bufferedReader.readLine();
+            }
+        }catch (IOException exception){
+            exception.printStackTrace();
+            throw new RuntimeException("IO exception");
+        }
+        return list.listIterator();
+    }
 }
