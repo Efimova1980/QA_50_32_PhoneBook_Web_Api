@@ -83,6 +83,7 @@ public class AddNewContactTests extends AppManager {
             dataProviderClass = ContactDataProvider.class)
     public void addNewContactNegativeTests_WrongEmailDP(Contact contact, Method method){
         logger.info("start test " + method.getName() + " with " + contact);
+
         addPage.typeContactForm(contact);
         addPage.clickBtnSave();
         Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
