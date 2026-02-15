@@ -1,6 +1,5 @@
 package ui_tests;
 
-import data_providers.InvalidMailForAddContactTest_DP;
 import data_providers.ContactDataProvider;
 import dto.Contact;
 import manager.AppManager;
@@ -10,6 +9,9 @@ import org.testng.annotations.Test;
 import pages.*;
 import static utils.ContactFactory.*;
 import utils.HeaderMenuItem;
+
+import java.lang.reflect.Method;
+
 import static pages.BasePage.*;
 import static utils.PropertiesReader.getProperty;
 
@@ -67,15 +69,6 @@ public class AddNewContactTests extends AppManager {
         contactsPage.clickLastContact();
         Assert.assertTrue(contactsPage.isContactPresentInTheContactCard(contact));
     }
-    //homework8
-    @Test(dataProvider = "dataProviderFromFile", dataProviderClass = InvalidMailForAddContactTest_DP.class)
-    public void addNewContactNegativeTestsWithInvalidMail_DP(String email){
-        Contact contact = positiveContact();
-        contact.setEmail(email);
-        addPage.typeContactForm(contact);
-        addPage.clickBtnSave();
-        Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
-    }
 
     @Test(dataProvider = "dataProviderFromFile_WrongPhone",
             dataProviderClass = ContactDataProvider.class)
@@ -85,9 +78,11 @@ public class AddNewContactTests extends AppManager {
         Assert.assertTrue(addPage.closeAlertReturnText().contains("Phone not valid"));
     }
 
+    //homework8-9
     @Test(dataProvider = "dataProviderFromFile_WrongMail",
             dataProviderClass = ContactDataProvider.class)
-    public void addNewContactNegativeTests_WrongEmailDP(Contact contact){
+    public void addNewContactNegativeTests_WrongEmailDP(Contact contact, Method method){
+        logger.info("start test " + method.getName() + " with " + contact);
         addPage.typeContactForm(contact);
         addPage.clickBtnSave();
         Assert.assertTrue(addPage.closeAlertReturnText().contains("Email not valid"));
@@ -100,6 +95,4 @@ public class AddNewContactTests extends AppManager {
         addPage.clickBtnSave();
         Assert.assertTrue(addPage.isButtonSaveDisabled());
     }
-
-
 }
