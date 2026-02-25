@@ -15,7 +15,6 @@ import java.lang.reflect.Method;
 import static pages.BasePage.*;
 import static utils.PropertiesReader.getProperty;
 
-
 public class AddNewContactTests extends AppManager {
     HomePage homePage;
     LoginPage loginPage;

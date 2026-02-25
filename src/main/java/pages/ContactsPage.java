@@ -8,8 +8,11 @@ import org.openqa.selenium.interactions.WheelInput;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.time.Duration;
 import java.util.List;
 
 public class ContactsPage extends BasePage{
@@ -30,10 +33,19 @@ public class ContactsPage extends BasePage{
     List<WebElement> listContacts;
     @FindBy(xpath = "//div[@class='contact-item_card__2SOIM'][last()]")
     WebElement lastContact;
+    @FindBy(xpath = "//div[@class='contact-item_card__2SOIM'][1]")
+    WebElement firstContact;
     @FindBy(xpath = "//div[@class='contact-page_leftdiv__yhyke']/div")
     WebElement divListContacts;
     @FindBy(xpath = "//div[@class='contact-item-detailed_card__50dTS']")
     WebElement contactCard;
+    @FindBy(xpath = "//div[@class='contact-item-detailed_card__50dTS']/button[2]")
+    WebElement btnRemove;
+
+    public void deleteFistContact(){
+        firstContact.click();
+        btnRemove.click();
+    }
 
     public void clickLastContact(){
         lastContact.click();
