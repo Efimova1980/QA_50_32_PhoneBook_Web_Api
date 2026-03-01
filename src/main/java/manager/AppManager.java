@@ -35,7 +35,7 @@ public class AppManager {
 
     // (@BeforeMethod) setup --> (@Test) testName --> (@AfterMethod) tearDown
 
-    @AfterMethod(enabled = false)
+    @AfterMethod(enabled = true)
     public void tearDown(){
         logger.info("Stop testing: " + LocalDate.now() + " : " + LocalTime.now());
         //очистка

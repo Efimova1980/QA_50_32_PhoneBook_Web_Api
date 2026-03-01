@@ -1,18 +1,14 @@
 package ui_tests;
 
+import dto.Contact;
 import manager.AppManager;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import pages.AddPage;
 import pages.ContactsPage;
 import pages.HomePage;
 import pages.LoginPage;
 import utils.HeaderMenuItem;
-
-import java.time.Duration;
 
 import static pages.BasePage.clickButtonHeader;
 import static utils.PropertiesReader.getProperty;
@@ -36,9 +32,16 @@ public class DeleteContactTest extends AppManager {
 
     @Test
     public void deleteFirstContactPositiveTest() {
-        if (countOfContacts == 0) return;
         contactsPage.deleteFistContact();
-        contactsPage.pause(3);
+//        contactsPage.pause(3); //если в методе нет WebDriverWait
         Assert.assertEquals(contactsPage.getCountOfContacts(), countOfContacts-1);
     }
+
+    @Test
+    public void deleteFirstContactPositiveTest_WithCheckFirstContact() {
+        Contact contactDeleted = contactsPage.deleteFistContact_WithCheckFirstContact();
+        //contactsPage.pause(3);  //если в методе нет WebDriverWait
+        Assert.assertFalse(contactsPage.isContactPresent(contactDeleted));
+    }
+
 }

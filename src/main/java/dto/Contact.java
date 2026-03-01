@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 
 public class Contact {
      private String id;
@@ -16,5 +17,8 @@ public class Contact {
      private String email;
      private String phone;
      private String address;
+     @EqualsAndHashCode.Exclude
      private String description;
 }
+
+

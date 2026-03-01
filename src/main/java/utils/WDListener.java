@@ -1,5 +1,6 @@
 package utils;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +14,12 @@ import java.util.Arrays;
 
 public class WDListener implements WebDriverListener {
     Logger logger = LoggerFactory.getLogger(WDListener.class);
+
+    @Override
+    public void afterAnyAlertCall(Alert alert, Method method, Object[] args, Object result) {
+        WebDriverListener.super.afterAnyAlertCall(alert, method, args, result);
+        logger.info("Alert accepted --> {}", alert.getText());
+    }
 
     @Override
     public void afterClick(WebElement element) {
@@ -53,9 +60,9 @@ public class WDListener implements WebDriverListener {
     @Override
     public void afterSendKeys(WebElement element, CharSequence... keysToSend) {
         WebDriverListener.super.afterSendKeys(element, keysToSend);
-        logger.info("AfterSendKeys: Keys --> {}, sent to element --> {}"
+        logger.info("AfterSendKeys: Keys --> {}, sent to element --> [{}] with text {}"
                 , Arrays.toString(keysToSend)
-                , element.getTagName());
+                , element.getTagName(), element.getText());
     }
 
     @Override
