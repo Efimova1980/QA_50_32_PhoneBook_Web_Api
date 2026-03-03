@@ -171,4 +171,8 @@ public class ContactsPage extends BasePage{
         //editDesc.sendKeys(contact.getDescription());
         btnSave.click();
     }
+
+    public String getTextInContact() {
+        return contactCard.getText();
+    }
 }

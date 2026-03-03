@@ -5,6 +5,7 @@ import manager.AppManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import pages.*;
 import utils.HeaderMenuItem;
 
@@ -17,6 +18,8 @@ public class EditContactTests extends AppManager {
     LoginPage loginPage;
     ContactsPage contactsPage;
     AddPage addPage;
+
+    SoftAssert softAssert = new SoftAssert();
 
     @BeforeMethod
     public void login(){
@@ -43,4 +46,16 @@ public class EditContactTests extends AppManager {
         contactsPage.pause(3);
         Assert.assertEquals(contact, contactsPage.getContactFromContactCard());
     }
+
+    @Test
+    public void EditFirstContactPositiveTest_WithCheckFirstContact1(){
+        Contact contact = positiveContact();
+        contactsPage.editFirstContact(contact);
+        contactsPage.pause(3);
+        String text = contactsPage.getTextInContact();
+        softAssert.assertTrue(text.contains(contact.getName()), "Name is not valid");
+        softAssert.assertTrue(text.contains(contact.getPhone()), "Phone is not valid");
+        softAssert.assertTrue(text.contains(contact.getEmail()), "Email is not valid");
+    }
+
 }
