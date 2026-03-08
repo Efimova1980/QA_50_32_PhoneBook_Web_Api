@@ -58,8 +58,8 @@ public class ContactDataProvider {
                 line = bufferedReader.readLine();
             }
         }catch (IOException exception){
-            exception.printStackTrace();
-            throw new RuntimeException("IO exception");
+            //exception.printStackTrace();
+            throw new RuntimeException("IO exception"+exception.getMessage());
         }
         return list.listIterator();
     }
