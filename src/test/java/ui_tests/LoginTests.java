@@ -19,7 +19,7 @@ import static utils.PropertiesReader.*;
 public class LoginTests extends AppManager {
     LoginPage loginPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void goToRegistrationPage(){
         new HomePage(getDriver()).clickBtnlogin();
         loginPage = new LoginPage(getDriver());
@@ -37,7 +37,7 @@ public class LoginTests extends AppManager {
         Assert.assertTrue(new ContactsPage(getDriver()).isTextInBtnSignOutPresent("Sign Out"));
     }
 
-    @Test
+    @Test(groups = {"smoke","user"})
     public void loginPositiveTestWithUser(){
         User user = new User(getProperty("base.properties", "login"),
                 getProperty("base.properties", "password"));
@@ -63,7 +63,7 @@ public class LoginTests extends AppManager {
         Assert.assertEquals(loginPage.closeAlertReturnText(), "Wrong email or password");
     }
 
-    @Test
+    @Test(groups = "negative")
     public void loginNegativeTest_SpacesBeforeAndAfterMail(){
         //spaces around email must be ignored
         User user = new User("  elton.john@gmail.com  ", "$John250347$");

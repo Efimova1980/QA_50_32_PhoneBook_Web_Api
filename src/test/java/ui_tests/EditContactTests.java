@@ -21,7 +21,7 @@ public class EditContactTests extends AppManager {
 
     SoftAssert softAssert = new SoftAssert();
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void login(){
         homePage = new HomePage(getDriver());
         loginPage = clickButtonHeader(HeaderMenuItem.LOGIN);
@@ -31,7 +31,7 @@ public class EditContactTests extends AppManager {
         contactsPage = new ContactsPage(getDriver());
     }
 
-    @Test
+    @Test(groups = {"smoke", "contact"})
     public void EditFirstContactPositiveTest(){
         Contact contact = positiveContact();
         contactsPage.editFirstContact(contact);

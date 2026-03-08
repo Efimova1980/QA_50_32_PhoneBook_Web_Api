@@ -19,7 +19,7 @@ public class DeleteContactTest extends AppManager {
     ContactsPage contactsPage;
     int countOfContacts;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void login() {
         homePage = new HomePage(getDriver());
         loginPage = clickButtonHeader(HeaderMenuItem.LOGIN);
@@ -30,7 +30,7 @@ public class DeleteContactTest extends AppManager {
         countOfContacts = contactsPage.getCountOfContacts();
     }
 
-    @Test
+    @Test(groups = {"smoke", "contact"})
     public void deleteFirstContactPositiveTest() {
         contactsPage.deleteFistContact();
 //        contactsPage.pause(3); //если в методе нет WebDriverWait

@@ -13,8 +13,8 @@ public class PropertiesReader {
             properties.load(fileInputStream);
             return properties.getProperty(key);
         }catch (IOException e) {
-            System.out.println("created exception");
-            e.printStackTrace();
+            System.out.println("created exception " + e);
+            //e.printStackTrace();
             return null;
         }
     }

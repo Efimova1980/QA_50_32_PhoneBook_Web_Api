@@ -16,7 +16,7 @@ import java.util.Random;
 public class RegistrationTests extends AppManager {
     LoginPage loginPage;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void goToRegistrationPage(){
         new HomePage(getDriver()).clickBtnlogin();
         loginPage = new LoginPage(getDriver());
@@ -43,7 +43,7 @@ public class RegistrationTests extends AppManager {
         Assert.assertTrue(new ContactsPage(getDriver()).isTextContactMessagePresent("No Contacts here!"));
     }
 
-    @Test
+    @Test(groups = {"smoke", "user"})
     public void registrationPositiveTest_WithFaker(){
         User user = UserFactory.positiveUser();
         loginPage.typeLoginRegistrationFormWithUser(user);
@@ -65,7 +65,7 @@ public class RegistrationTests extends AppManager {
     Pass1234!xxxxxxxxxx	-T15 > 15 chars
      */
 
-    @Test
+    @Test( groups = "negative")
     public void registrationNegativeTest_ValidEmail_EmptyPassword(){
         User user = UserFactory.positiveUser();
         user.setPassword("");
@@ -92,7 +92,7 @@ public class RegistrationTests extends AppManager {
         Assert.assertTrue(loginPage.closeAlertReturnText().contains("Wrong email or password format"));
     }
 
-    @Test
+    @Test(groups = "negative")
     public void registrationNegativeTest_ValidEmail_CyrLetterInPassword(){
         User user = UserFactory.positiveUser();
         user.setPassword("Pass1234!ш");

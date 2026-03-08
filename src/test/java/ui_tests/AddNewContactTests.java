@@ -22,7 +22,7 @@ public class AddNewContactTests extends AppManager {
     AddPage addPage;
     int countOfContacts;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void login(){
         homePage = new HomePage(getDriver());
         loginPage = clickButtonHeader(HeaderMenuItem.LOGIN);
@@ -34,7 +34,7 @@ public class AddNewContactTests extends AppManager {
         addPage = clickButtonHeader(HeaderMenuItem.ADD);
     }
 
-    @Test
+    @Test(groups = {"smoke", "contact"}) //если группа одна, то скобки внутри не нужны
     public void addNewContactPositiveTest(){
         addPage.typeContactForm(positiveContact());
         addPage.clickBtnSave();
@@ -70,7 +70,7 @@ public class AddNewContactTests extends AppManager {
     }
 
     @Test(dataProvider = "dataProviderFromFile_WrongPhone",
-            dataProviderClass = ContactDataProvider.class)
+            dataProviderClass = ContactDataProvider.class, groups = "negative")
     public void addNewContactNegativeTests_WrongPhoneDP(Contact contact){
         addPage.typeContactForm(contact);
         addPage.clickBtnSave();
