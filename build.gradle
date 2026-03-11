@@ -18,9 +18,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation 'org.projectlombok:lombok:1.18.28'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.28' //автоматически генерирует часть кода
 
     implementation 'ch.qos.logback:logback-classic:1.5.18'
+
+    implementation 'com.google.code.gson:gson:2.8.6' //преобразование JSON ↔ Java-объектов.
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0' //это HTTP-клиент для Java и Android.
 
 }
 
@@ -55,5 +58,13 @@ task different_tests(type: Test){
         }else {
             suites 'src/test/resources/smoketests.xml'
         }
+    }
+}
+
+task browser_test(type: Test){
+    useTestNG(){
+        if(project.hasProperty('browser'))
+            systemProperty 'browser', project.property('browser') // "${browser}"
+        suites 'src/test/resources/smoketests.xml'
     }
 }

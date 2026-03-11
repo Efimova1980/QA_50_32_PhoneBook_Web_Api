@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import pages.BasePage;
-import static utils.TakeScreenShot.*;
-
 
 public class TestNGListener implements ITestListener {
     private WebDriver driver;
@@ -19,25 +16,25 @@ public class TestNGListener implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         ITestListener.super.onTestSuccess(result);
-        logger.info("test success --> {}", result.getName());
+        logger.info(result.getTestClass() + " test success --> " + result.getName());
     }
 
     @Override
     public void onTestStart(ITestResult result) {
         ITestListener.super.onTestStart(result);
-        logger.info("{} starts test --> {}", result.getTestClass().getName(), result.getName());
+        logger.info(result.getTestClass() + " start test --> " + result.getName());
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
         ITestListener.super.onTestSkipped(result);
-        logger.info("Test skipped --> {}", result.getTestName());
+        logger.info(result.getTestClass() + " test skipped --> " + result.getTestName());
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
         ITestListener.super.onTestFailure(result);
-        logger.info("Test failed --> {}", result.getName());
+        logger.info(result.getTestClass() + " test failed --> " + result.getName());
         this.driver = ((AppManager)result.getInstance()).getDriver();
         TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
     }
@@ -45,7 +42,7 @@ public class TestNGListener implements ITestListener {
     @Override
     public void onTestFailedWithTimeout(ITestResult result) {
         ITestListener.super.onTestFailedWithTimeout(result);
-        logger.info("Test failed with timeout --> {}", result.getName());
+        logger.info(result.getTestClass() + " test failed with timeout --> " + result.getName());
     }
 
     @Override

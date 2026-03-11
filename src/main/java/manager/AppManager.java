@@ -2,6 +2,8 @@ package manager;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import java.time.LocalTime;
 public class AppManager {
     private WebDriver driver;
     public final static Logger logger = LoggerFactory.getLogger(AppManager.class);
+    static String browser = System.getProperty("browser", "chrome");
 
     public WebDriver getDriver() {
         return driver;
@@ -24,7 +27,23 @@ public class AppManager {
     @BeforeMethod(alwaysRun = true)
     public void setup(){ //инициализация
         logger.info("Start testing: " + LocalDate.now() + " : " + LocalTime.now());
-        driver = new ChromeDriver();
+
+        switch (browser.toLowerCase()){
+            case "firefox":
+                driver = new FirefoxDriver();
+                System.out.println("Use firefox");
+                break;
+            case "edge":
+                driver = new EdgeDriver();
+                System.out.println("Use Edge");
+                break;
+            case "chrome":
+                driver = new ChromeDriver();
+                System.out.println("Use Chrome");
+                break;
+        }
+
+        //driver = new ChromeDriver();
         WebDriverListener webDriverListener = new WDListener();
         driver = new EventFiringDecorator<>(webDriverListener)
                 .decorate(driver);

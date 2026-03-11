@@ -2,6 +2,8 @@
 .\gradlew clean smoke_contact_tests
 .\gradlew clean negativetests
 .\gradlew clean different_tests -Dsuite=smoke_contact_tests
+.\gradlew clean browser_test -Pbrowser=firefox
+
 
 через терминал компьтера
 запуск задачи без запуска идеи
