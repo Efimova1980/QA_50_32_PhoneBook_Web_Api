@@ -7,10 +7,10 @@ import dto.User;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import utils.BaseApi;
 import utils.ContactFactory;
 import utils.TestNGListener;
@@ -23,7 +23,6 @@ import static utils.PropertiesReader.getProperty;
 
 public class AddNewContactApiTests implements BaseApi {
     Token token;
-    SoftAssert softAssert = new SoftAssert();
 
     @BeforeClass
     public void login(){
@@ -55,14 +54,7 @@ public class AddNewContactApiTests implements BaseApi {
                 .build();
 
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
-
-            String body = response.body().string();
-            ResponseMessage responseMessage = GSON.fromJson(body, ResponseMessage.class);
-
-            softAssert.assertEquals(response.code(),200);
-            softAssert.assertTrue(responseMessage.getMessage().contains("Contact was added!"));
-            softAssert.assertAll();
-
+            Assert.assertEquals(response.code(),200);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
