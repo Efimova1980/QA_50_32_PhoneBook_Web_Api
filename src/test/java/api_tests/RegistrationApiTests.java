@@ -106,7 +106,7 @@ public class RegistrationApiTests implements BaseApi {
     public  void registrationNegative_WrongURL_ApiTest(){
         User user = positiveUser();
         RequestBody requestBody = RequestBody.create(GSON.toJson(user), JSON);
-        Request request = new Request.Builder().url("https://contactapp-telran-backend.herokuapp.com"
+        Request request = new Request.Builder().url("http://contactapp-telran-backend.herokuapp.com"
                 + REGISTRATION_URL).post(requestBody).build();
         Response response;
         try {
