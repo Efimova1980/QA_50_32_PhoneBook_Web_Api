@@ -194,4 +194,25 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
         }
     }
 
+    @Test
+    public void addNewContactNegative_ContactDuplicate_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        String id = addContactGetId(contact, token);
+        contact.setId(id);
+
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL_HTTP + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH, token.getToken() )
+                .post(requestBody)
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            //got 200 - bug (no checking duplication)
+            Assert.assertEquals(response.code(), 409);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
