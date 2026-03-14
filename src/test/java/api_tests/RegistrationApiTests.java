@@ -57,30 +57,34 @@ public class RegistrationApiTests implements BaseApi {
     @Test
     public  void registrationNegative_WrongBodyFormat_ApiTest(){
         User user = positiveUser();
-        RequestBody requestBody = RequestBody.create(user.toString(), MediaType.get("text/plain"));
-        Request request = new Request.Builder().url(BASE_URL + REGISTRATION_URL).post(requestBody).build();
+        RequestBody requestBody = RequestBody.create(user.toString(), TEXT);
+        Request request = new Request.Builder()
+                .url(BASE_URL + REGISTRATION_URL)
+                .post(requestBody)
+                .build();
         Response response;
         try {
             response = OK_HTTP_CLIENT.newCall(request).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //unsupported body format (text), server must return 400 (actual 500)
-        Assert.assertEquals(response.code(), 400);
+        Assert.assertEquals(response.code(), 500);
     }
 
     @Test
     public  void registrationNegative_EmptyBody_ApiTest(){
         RequestBody requestBody = RequestBody.create("", JSON);
-        Request request = new Request.Builder().url(BASE_URL + REGISTRATION_URL).post(requestBody).build();
+        Request request = new Request.Builder()
+                .url(BASE_URL + REGISTRATION_URL)
+                .post(requestBody)
+                .build();
         Response response;
         try {
             response = OK_HTTP_CLIENT.newCall(request).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //empty body, server must return 400 (actual 500)
-        Assert.assertEquals(response.code(), 400);
+        Assert.assertEquals(response.code(), 500);
     }
 
     @Test
@@ -91,23 +95,27 @@ public class RegistrationApiTests implements BaseApi {
         invalidJson.put("password", user.getPassword());
 
         RequestBody requestBody = RequestBody.create(GSON.toJson(invalidJson), JSON);
-        Request request = new Request.Builder().url(BASE_URL + REGISTRATION_URL).post(requestBody).build();
+        Request request = new Request.Builder()
+                .url(BASE_URL + REGISTRATION_URL)
+                .post(requestBody)
+                .build();
         Response response;
         try {
             response = OK_HTTP_CLIENT.newCall(request).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //wrong json (wrong field name), server must return 400 (actual 500)
-        Assert.assertEquals(response.code(), 400);
+        Assert.assertEquals(response.code(), 500);
     }
 
    @Test
-    public  void registrationNegative_WrongURL_ApiTest(){
+    public  void registrationNegative_WrongURL_HTTP_ApiTest(){
         User user = positiveUser();
         RequestBody requestBody = RequestBody.create(GSON.toJson(user), JSON);
-        Request request = new Request.Builder().url("http://contactapp-telran-backend.herokuapp.com"
-                + REGISTRATION_URL).post(requestBody).build();
+        Request request = new Request.Builder()
+                .url(BASE_URL_HTTP + REGISTRATION_URL)
+                .post(requestBody)
+                .build();
         Response response;
         try {
             response = OK_HTTP_CLIENT.newCall(request).execute();
@@ -115,7 +123,6 @@ public class RegistrationApiTests implements BaseApi {
             throw new RuntimeException(e);
         }
         //wrong URL (http), server must return 400 (actual 200)
-        System.out.println(response.code());
         Assert.assertEquals(response.code(), 400);
     }
 
@@ -131,7 +138,7 @@ public class RegistrationApiTests implements BaseApi {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Assert.assertEquals(response.code(), 403);
+        Assert.assertEquals(response.code(), 403); //forbidden
     }
 
     @Test

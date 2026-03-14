@@ -11,18 +11,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 import utils.BaseApi;
 import utils.ContactFactory;
 import utils.TestNGListener;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static utils.PropertiesReader.getProperty;
 
-@Listeners(TestNGListener.class)
+//@Listeners(TestNGListener.class)
 
 public class AddNewContactApiTests implements BaseApi {
     Token token;
+    SoftAssert softAssert = new SoftAssert();
 
     @BeforeClass
     public void login(){
@@ -35,8 +39,11 @@ public class AddNewContactApiTests implements BaseApi {
                 .url(BASE_URL + LOGIN_URL)
                 .post(requestBody)
                 .build();
+
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
-            token = GSON.fromJson(response.body().string(), Token.class);
+            if (response.code()==200 && response.body() != null) {
+                token = GSON.fromJson(response.body().string(), Token.class);
+            }else System.out.println("no token in response");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +56,7 @@ public class AddNewContactApiTests implements BaseApi {
                 .create(GSON.toJson(contact), JSON);
         Request request = new Request.Builder()
                 .url(BASE_URL + ADD_NEW_CONTACT_URL)
-                .addHeader("Authorization","Bearer " + token.getToken())
+                .addHeader(AUTH,"Bearer " + token.getToken())
                 .post(requestBody)
                 .build();
 
@@ -59,4 +66,131 @@ public class AddNewContactApiTests implements BaseApi {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    public void addNewContactPositive_ApiTest2(){
+        Contact contact = ContactFactory.positiveContact();
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH,"Bearer " + token.getToken())
+                .post(requestBody)
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            softAssert.assertEquals(response.code(),200, "Validate status code");
+            ResponseMessage responseMessage = GSON.fromJson(response.body().string(), ResponseMessage.class);
+            softAssert.assertTrue(responseMessage.getMessage().contains("Contact was added!"), "validate message");
+            softAssert.assertAll();
+        } catch (IOException e) {
+            //e.printStackTrace();
+            Assert.fail("created exception");
+        }
+    }
+
+    @Test
+    public void addNewContactNegative_WO_Token_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_NEW_CONTACT_URL)
+                .post(requestBody)
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            Assert.assertEquals(response.code(),403);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void addNewContactNegative_Wrong_Token_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH,"Bearer " )
+                .post(requestBody)
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            Assert.assertEquals(response.code(),401);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    //---------------------------------- homework -17 ------------------------------------------
+
+    @Test
+    public void addNewContactNegative_WrongBodyFormat_Text_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), TEXT); //text
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH, token.getToken() )
+                .post(requestBody)
+                .build();
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            softAssert.assertEquals(response.code(),500);
+            ResponseMessage responseMessage = GSON.fromJson(response.body().string(), ResponseMessage.class);
+            softAssert.assertTrue(responseMessage.getMessage().contains("Content type 'text/plain;charset=utf-8' not supported"));
+            softAssert.assertAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void addNewContactNegative_WrongJSON_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        Map<String, String> wrongJson = new HashMap<>();
+        wrongJson.put("id", contact.getId());
+        wrongJson.put("name", contact.getName());
+        wrongJson.put("lastName", contact.getLastName());
+        wrongJson.put("email", contact.getEmail());
+        wrongJson.put("phoneNumber", contact.getPhone()); //wrong field name
+        wrongJson.put("address", contact.getAddress());
+        wrongJson.put("description", contact.getDescription());
+
+        System.out.println(wrongJson.toString());
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(wrongJson), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH,"Bearer "+ token.getToken() )
+                .post(requestBody)
+                .build();
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            //got response.code 200 = OK, contact was added WO field 'phone' (claimed field)
+            Assert.assertEquals(response.code(),500);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void addNewContactNegative_WrongURL_HTTP_ApiTest(){
+        Contact contact = ContactFactory.positiveContact();
+        RequestBody requestBody = RequestBody
+                .create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL_HTTP + ADD_NEW_CONTACT_URL)
+                .addHeader(AUTH, token.getToken() )
+                .post(requestBody)
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            //got response code 200
+            Assert.assertEquals(response.code(),400);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
