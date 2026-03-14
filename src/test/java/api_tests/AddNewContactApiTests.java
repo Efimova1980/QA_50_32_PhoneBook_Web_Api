@@ -215,4 +215,5 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
             throw new RuntimeException(e);
         }
     }
+
 }
