@@ -1,9 +1,6 @@
 package api_tests;
 
-import dto.Contact;
-import dto.ResponseMessage;
-import dto.Token;
-import dto.User;
+import dto.*;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -14,6 +11,7 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utils.BaseApi;
 import utils.ContactFactory;
+import utils.ILogin;
 import utils.TestNGListener;
 
 import java.io.IOException;
@@ -24,7 +22,7 @@ import static utils.PropertiesReader.getProperty;
 
 //@Listeners(TestNGListener.class)
 
-public class AddNewContactApiTests implements BaseApi {
+public class AddNewContactApiTests implements BaseApi, ILogin {
     Token token;
     SoftAssert softAssert = new SoftAssert();
 
@@ -118,7 +116,11 @@ public class AddNewContactApiTests implements BaseApi {
                 .build();
 
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
-            Assert.assertEquals(response.code(),401);
+            softAssert.assertEquals(response.code(),401, "validate status code");
+            ErrorMessageDto errorMessageDto = GSON.fromJson(response.body().string(), ErrorMessageDto.class);
+            softAssert.assertEquals(errorMessageDto.getError(), "Unauthorized", "validate error");
+            softAssert.assertTrue(errorMessageDto.getMessage().contains("strings must contain exactly 2 period characters"), "validate message");
+            softAssert.assertAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -136,9 +138,10 @@ public class AddNewContactApiTests implements BaseApi {
                 .post(requestBody)
                 .build();
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
-            softAssert.assertEquals(response.code(),500);
-            ResponseMessage responseMessage = GSON.fromJson(response.body().string(), ResponseMessage.class);
-            softAssert.assertTrue(responseMessage.getMessage().contains("Content type 'text/plain;charset=utf-8' not supported"));
+            softAssert.assertEquals(response.code(),500, "validate status code");
+            ErrorMessageDto errorMessageDto = GSON.fromJson(response.body().string(), ErrorMessageDto.class);
+            softAssert.assertTrue(errorMessageDto.getMessage().contains("Content type 'text/plain;charset=utf-8' not supported"), "validate message");
+            softAssert.assertTrue(errorMessageDto.getError().contains("Internal Server Error"), "validate error");
             softAssert.assertAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -157,7 +160,6 @@ public class AddNewContactApiTests implements BaseApi {
         wrongJson.put("address", contact.getAddress());
         wrongJson.put("description", contact.getDescription());
 
-        System.out.println(wrongJson.toString());
         RequestBody requestBody = RequestBody
                 .create(GSON.toJson(wrongJson), JSON);
         Request request = new Request.Builder()
@@ -191,6 +193,5 @@ public class AddNewContactApiTests implements BaseApi {
             throw new RuntimeException(e);
         }
     }
-
 
 }
