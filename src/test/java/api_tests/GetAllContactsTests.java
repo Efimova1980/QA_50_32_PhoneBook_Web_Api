@@ -1,5 +1,6 @@
 package api_tests;
 
+import dto.ContactsDto;
 import dto.ErrorMessageDto;
 import dto.ResponseMessage;
 import dto.Token;
@@ -33,6 +34,8 @@ public class GetAllContactsTests implements BaseApi, ILogin {
                 .get()
                 .build();
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            ContactsDto contactsDto = GSON.fromJson(response.body().string(), ContactsDto.class);
+            System.out.println(contactsDto);
             Assert.assertEquals(response.code(),200);
         } catch (IOException e) {
             throw new RuntimeException(e);

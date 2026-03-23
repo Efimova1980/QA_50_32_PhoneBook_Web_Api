@@ -1,9 +1,6 @@
 package api_tests;
 
-import dto.Contact;
-import dto.ErrorMessageDto;
-import dto.ResponseMessage;
-import dto.Token;
+import dto.*;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.testng.annotations.BeforeClass;
@@ -47,6 +44,26 @@ public class DeleteContactApiTests implements BaseApi, ILogin {
     }
 
     @Test
+    public void deleteFirstContactFromListContactsPositive_ApiTest(){
+        ContactsDto contactsDto = getListOfAllUserContacts(token);
+        id = contactsDto.getContacts().get(0).getId();
+        Request request = new Request.Builder()
+                .url(BASE_URL + DELETE_CONTACT_URL  + id )
+                .addHeader(AUTH, token.getToken())
+                .delete()
+                .build();
+
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            softAssert.assertEquals(response.code(), 200, "validate status code");
+            ResponseMessage responseMessage = GSON.fromJson(response.body().string(), ResponseMessage.class);
+            softAssert.assertTrue(responseMessage.getMessage().contains("Contact was deleted"), "validate message");
+            softAssert.assertAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public  void deleteContactNegative_Wrong_ID_ApiTest(){
         Request request = new Request.Builder()
                 .url(BASE_URL + DELETE_CONTACT_URL + "wrong_id" )
@@ -63,6 +80,4 @@ public class DeleteContactApiTests implements BaseApi, ILogin {
             throw new RuntimeException(e);
         }
     }
-
-
 }

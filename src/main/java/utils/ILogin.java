@@ -1,6 +1,7 @@
 package utils;
 
 import dto.Contact;
+import dto.ContactsDto;
 import dto.Token;
 import dto.User;
 import okhttp3.Request;
@@ -60,4 +61,19 @@ public interface ILogin extends BaseApi {
         }
         return "";
     }
+
+    default ContactsDto getListOfAllUserContacts(Token token){
+        Request request = new Request.Builder()
+                .url(BASE_URL + GET_ALL_CONTACTS_URL)
+                .addHeader(AUTH,token.getToken())
+                .get()
+                .build();
+        try (Response response = OK_HTTP_CLIENT.newCall(request).execute()){
+            ContactsDto contactsDto = GSON.fromJson(response.body().string(), ContactsDto.class);
+            return contactsDto;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
