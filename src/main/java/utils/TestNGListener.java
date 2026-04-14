@@ -30,13 +30,30 @@ public class TestNGListener implements ITestListener {
         ITestListener.super.onTestSkipped(result);
         logger.info(result.getTestClass() + " test skipped --> " + result.getTestName());
     }
+//
+//    @Override
+//    public void onTestFailure(ITestResult result) {
+//        ITestListener.super.onTestFailure(result);
+//        logger.info(result.getTestClass() + " test failed --> " + result.getName());
+//        this.driver = ((AppManager)result.getInstance()).getDriver();
+//        TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
+//    }
 
     @Override
     public void onTestFailure(ITestResult result) {
         ITestListener.super.onTestFailure(result);
-        logger.info(result.getTestClass() + " test failed --> " + result.getName());
-        this.driver = ((AppManager)result.getInstance()).getDriver();
-        TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
+        logger.info(result.getTestClass() + " test failure --> " + result.getName());
+        logger.error("Error");
+
+        Object testClass = result.getInstance();
+        if (testClass instanceof AppManager) {
+            this.driver = ((AppManager) testClass).getDriver();
+        }
+        if (this.driver != null) {
+            TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
+        } else {
+            logger.warn("Driver is null. Skipping screenshot for: " + result.getName());
+        }
     }
 
     @Override

@@ -150,7 +150,7 @@ public class LoginApiTests implements BaseApi {
         RequestBody requestBody = RequestBody
                 .create(GSON.toJson(wrongUser), JSON);
         Request request = new Request.Builder()
-                .url(BASE_URL_HTTP+ LOGIN_URL )
+                .url(BASE_URL+ LOGIN_URL )
                 .post(requestBody)
                 .build();
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()) {
@@ -166,7 +166,7 @@ public class LoginApiTests implements BaseApi {
         RequestBody requestBody = RequestBody
                 .create(GSON.toJson(user), JSON);
         Request request = new Request.Builder()
-                .url(BASE_URL_HTTP+ LOGIN_URL )
+                .url(BASE_URL+ LOGIN_URL )
                 .post(requestBody)
                 .build();
         try (Response response = OK_HTTP_CLIENT.newCall(request).execute()) {
