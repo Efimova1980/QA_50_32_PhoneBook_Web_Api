@@ -15,62 +15,74 @@ public class TestNGListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        ITestListener.super.onTestSuccess(result);
-        logger.info(result.getTestClass() + " test success --> " + result.getName());
+        //ITestListener.super.onTestSuccess(result);
+        logger.info("TEST PASSED: {}#{}",
+                result.getTestClass().getRealClass().getSimpleName(),
+                result.getMethod().getMethodName());
     }
 
     @Override
     public void onTestStart(ITestResult result) {
-        ITestListener.super.onTestStart(result);
-        logger.info(result.getTestClass() + " start test --> " + result.getName());
+        //ITestListener.super.onTestStart(result);
+        logger.info("TEST STARTED: {}#{}",
+                result.getTestClass().getRealClass().getSimpleName(),
+                result.getMethod().getMethodName());
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        ITestListener.super.onTestSkipped(result);
-        logger.info(result.getTestClass() + " test skipped --> " + result.getTestName());
+        //ITestListener.super.onTestSkipped(result);
+        logger.info("TEST SKIPPED: {}#{}",
+                result.getTestClass().getRealClass().getSimpleName(),
+                result.getMethod().getMethodName());
     }
-//
-//    @Override
-//    public void onTestFailure(ITestResult result) {
-//        ITestListener.super.onTestFailure(result);
-//        logger.info(result.getTestClass() + " test failed --> " + result.getName());
-//        this.driver = ((AppManager)result.getInstance()).getDriver();
-//        TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
-//    }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        ITestListener.super.onTestFailure(result);
-        logger.info(result.getTestClass() + " test failure --> " + result.getName());
-        logger.error("Error");
+        //what test class and method was failed
+        logger.info("TEST FAILED: {}#{}",
+                result.getTestClass().getRealClass().getSimpleName(),
+                result.getMethod().getMethodName());
 
-        Object testClass = result.getInstance();
-        if (testClass instanceof AppManager) {
-            this.driver = ((AppManager) testClass).getDriver();
+        //if test failed with exception
+        if (result.getThrowable() != null) {
+            logger.error("Failure reason:", result.getThrowable());
         }
-        if (this.driver != null) {
-            TakeScreenShot.takeScreenShot((TakesScreenshot) driver);
+
+        //all UI tests extends AppManager but API test do not
+        if (result.getInstance() instanceof AppManager appManager) {
+            this.driver = appManager.getDriver();
+        }
+
+        //ChromeDriver implements TakeScreenshot
+        if (driver instanceof TakesScreenshot ts) {
+            TakeScreenShot.takeScreenShot(ts);
         } else {
-            logger.warn("Driver is null. Skipping screenshot for: " + result.getName());
+            logger.warn("Driver is null or unsupported for screenshots: {}",
+                    result.getMethod().getMethodName());
         }
     }
 
     @Override
     public void onTestFailedWithTimeout(ITestResult result) {
-        ITestListener.super.onTestFailedWithTimeout(result);
-        logger.info(result.getTestClass() + " test failed with timeout --> " + result.getName());
-    }
+        //ITestListener.super.onTestFailedWithTimeout(result);
+        logger.info("TIMEOUT FAILURE: {}#{}",
+                result.getTestClass().getRealClass().getSimpleName(),
+                result.getMethod().getMethodName());    }
 
     @Override
     public void onStart(ITestContext context) {
-        ITestListener.super.onStart(context);
-        logger.info("Information on starting test: {}", context.getStartDate());
+        //ITestListener.super.onStart(context);
+        logger.info("Test suite '{}' started at: {}",
+                context.getName(),
+                context.getStartDate());
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        ITestListener.super.onFinish(context);
-        logger.info("Information on ending test: {}", context.getEndDate());
+        //ITestListener.super.onFinish(context);
+        logger.info("Test suite '{}' finished at: {}",
+                context.getName(),
+                context.getEndDate());
     }
 }

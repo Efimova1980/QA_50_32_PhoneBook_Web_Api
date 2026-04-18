@@ -53,9 +53,10 @@ public class EditContactTests extends AppManager {
         contactsPage.editFirstContact(contact);
         contactsPage.pause(3);
         String text = contactsPage.getTextInContact();
-        softAssert.assertTrue(text.contains(contact.getName()), "Name is not valid");
-        softAssert.assertTrue(text.contains(contact.getPhone()), "Phone is not valid");
-        softAssert.assertTrue(text.contains(contact.getEmail()), "Email is not valid");
+        softAssert.assertTrue(text.contains(contact.getName()), "validate name");
+        softAssert.assertTrue(text.contains(contact.getPhone()), "validate phone");
+        softAssert.assertTrue(text.contains(contact.getEmail()), "validate email");
+        softAssert.assertAll();
     }
 
 }
